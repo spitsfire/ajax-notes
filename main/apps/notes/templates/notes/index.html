@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="container my-4">
+            <h1 class="display-4">New Note</h1>
+            <form action="/create" method="post" id="new_note">
+                {% csrf_token %}
+                <textarea name="content" cols="10" rows="5" class="form-control w-50"></textarea>
+                <button type="submit" class="btn btn-primary mt-3">Add</button>
+            </form>
+        </div>
+        <div id="all-notes"></div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url: 'snippet.html',
+                success: function (serverResponse) {
+                    $('#all-notes').html(serverResponse)
+                }
+            })
+        });
+        $('#new_note').submit(function (e) {
+            e.preventDefault()
+            console.log('Sending Ajax request to', $(this).attr('action'))
+            console.log('Submitting the following data', $(this).serialize())
+            $.ajax({
+                url: $(this).attr('action'),
+                /* Where should this go? */
+                method: 'post',
+                /* Which HTTP verb? */
+                data: $(this).serialize(),
+                /* Any data to send along? */
+                success: function (serverResponse) { /* What code should we run when the server responds? */
+                    $('#all-notes').html(serverResponse)
+                }
+            })
+        });
+    </script>
+</body>
+
+</html>
